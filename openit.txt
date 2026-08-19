@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Message For You</title>
+    <style>
+        body {
+            background-color: #fff0f3;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* Surprise Envelope Stage */
+        .envelope-container {
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .envelope-container:hover {
+            transform: scale(1.05);
+        }
+        .envelope {
+            font-size: 100px;
+            animation: float 2s infinite ease-in-out;
+        }
+        .click-text {
+            color: #ff4d6d;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-top: 15px;
+            animation: pulse 1.5s infinite;
+        }
+
+        /* Main Content Card (Hidden at first) */
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(255, 77, 109, 0.15);
+            text-align: center;
+            max-width: 420px;
+            width: 90%;
+            display: none;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.5s ease-out;
+            position: relative;
+        }
+
+        h1 { color: #ff4d6d; margin-bottom: 10px; font-size: 1.8rem; }
+        p { color: #5c677d; font-size: 1.1rem; line-height: 1.6; }
+        
+        /* Interactive Buttons */
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+            height: 50px;
+            position: relative;
+        }
+        .btn {
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        #yesBtn {
+            background-color: #ff4d6d;
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.3);
+        }
+        #yesBtn:hover { transform: scale(1.1); background-color: #ff758f; }
+        
+        #noBtn {
+            background-color: #e2eafc;
+            color: #5c677d;
+            position: absolute;
+            right: 50px;
+        }
+
+        /* Floating Hearts Animation */
+        .heart-particle {
+            position: absolute;
+            color: #ff4d6d;
+            pointer-events: none;
+            animation: fly up 1s linear forwards;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Stage 1: The Surprise Reveal Box -->
+    <div class="envelope-container" id="surpriseBox" onclick="revealMessage()">
+        <div class="envelope">✉️💝</div>
+        <div class="click-text">You have a special message. Click to open!</div>
+    </div>
+
+    <!-- Stage 2: The Apology Content Card -->
+    <div class="card" id="mainCard">
+        <h1 id="title">I'm So Sorry, Handsome... 🥺</h1>
+        <p id="message">I really hate it when we fight, and I hate hurting you even more. You mean the absolute world to me. Can you please forgive your favorite headache?</p>
+        
+        <div class="btn-container">
+            <button class="btn" id="yesBtn" onclick="forgiven()">Yes</button>
+            <button class="btn" id="noBtn" onmouseover="runAway()">No</button>
+        </div>
+    </div>
+
+    <script>
+        // 1. Reveal Stage: Transition from Envelope to Card
+        function revealMessage() {
+            const box = document.getElementById('surpriseBox');
+            const card = document.getElementById('mainCard');
+            
+            box.style.display = 'none';
+            card.style.display = 'block';
+            
+            // Trigger floating heart explosion effect
+            for(let i=0; i<30; i++) { createHeart(); }
+
+            setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'scale(1)';
+            }, 50);
+        }
+
+        // 2. Interactive "No" Button: Runs away on hover
+        function runAway() {
+            const noBtn = document.getElementById('noBtn');
+            // Calculate a completely random position inside the safe browser window boundaries
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 40) + 20;
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 40) + 20;
+            
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+        }
+
+        // 3. Success Stage: If he managed or wanted to click Yes
+        function forgiven() {
+            document.getElementById('title').innerHTML = "YAY! Thank you! ❤️";
+            document.getElementById('message').innerHTML = "I promise to make it up to you. I love you to the moon and back! See you soon!";
+            document.getElementById('yesBtn').style.display = 'none';
+            document.getElementById('noBtn').style.display = 'none';
+            
+            // Continuous happy heart rain
+            setInterval(createHeart, 150);
+        }
+
+        // Helper function for visual flair
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart-particle');
+            heart.innerHTML = ['❤️','💖','💝','🌸'][Math.floor(Math.random()*4)];
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.top = Math.random() * 100 + 'vh';
+            heart.style.fontSize = Math.random() * 20 + 20 + 'px';
+            heart.style.transition = 'all 1.5s ease-out';
+            
+            document.body.appendChild(heart);
+            
+            setTimeout(() => {
+                heart.style.transform = 'translateY(-150px) scale(0)';
+                heart.style.opacity = '0';
+            }, 50);
+            
+            setTimeout(() => { heart.remove(); }, 1500);
+        }
+    </script>
+</body>
+</html>
